@@ -48,19 +48,18 @@ def random_ptt_boards():
 
     return board_info
 
-def ptt_subcategories(url):
-    soup = BeautifulSoup(requests.get(url).text, 'html.parser')
-    subcategories = []
+def movie_rank(url):
+    soup = BeautifulSoup(requests.get(url).text)
+    first = soup.find('dl', class_ = 'rank_list_box').find('h2').text
+    movie_rank = '第1名：' + first + '\n'
 
-    # 抓取子分類的名稱和連結
-    data = soup.find_all('div', class_='b-ent')
-    for item in data:
-        category_name = item.find('div', class_='board-name').text
-        category_url = 'https://www.ptt.cc' + item.find('a')['href']
-        subcategories.append([category_name, category_url])
+    movie_list = soup.find_all('div', class_ = 'rank_txt')
+    for index, info in enumerate(movie_list):
+        movie = info.text
+        movie_rank += '第{}名：{}\n'.format(str(index + 2), movie)
 
-    return subcategories
-  
+    return movie_rank
+
 @line_handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
 
@@ -75,19 +74,19 @@ def handle_message(event):
             template=ImageCarouselTemplate(
                 columns=[
                     ImageCarouselColumn(
-                        image_url='https://down-tw.img.susercontent.com/file/4968c4b4f185386a219b6396c2698dfc@resize_w900_nl.webp',  # 這裡可以用 PTT 的通用 logo
+                        image_url='https://www.ptt.cc/images/logo.png',  # 這裡可以用 PTT 的通用 logo
                         action=URIAction(
                             label=board_list[0][0],  # 第一個板名
                             uri=board_list[0][1]     # 第一個板的 URL
                         )),
                     ImageCarouselColumn(
-                        image_url='https://down-tw.img.susercontent.com/file/4968c4b4f185386a219b6396c2698dfc',
+                        image_url='https://www.ptt.cc/images/logo.png',
                         action=URIAction(
                             label=board_list[1][0],  # 第二個板名
                             uri=board_list[1][1]     # 第二個板的 URL
                         )),
                     ImageCarouselColumn(
-                        image_url='https://down-tw.img.susercontent.com/file/4968c4b4f185386a219b6396c2698dfc',
+                        image_url='https://www.ptt.cc/images/logo.png',
                         action=URIAction(
                             label=board_list[2][0],  # 第三個板名
                             uri=board_list[2][1]     # 第三個板的 URL
@@ -97,56 +96,7 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, board_template)
 
-    if event.message.text == '分類':
-    button_template = TemplateSendMessage(
-        alt_text='button template',
-        template=ButtonsTemplate(
-            thumbnail_image_url='https://i.imgur.com/a5MK3cu.jpeg',
-            title='PTT 生活娛樂類分類',
-            text='請選擇要查看的分類',
-            actions=[
-                MessageAction(
-                    label='查看分類',
-                    text='查看分類'
-                )
-            ])
-        )
-    line_bot_api.reply_message(event.reply_token, button_template)
-
-if event.message.text == '查看分類':
-    # 抓取 PTT 生活娛樂類的子分類
-    subcategories = ptt_subcategories('https://www.ptt.cc/cls/1')
-
-    # 顯示前 3 個分類作為範例（你可以顯示更多或使用 ImageCarouselTemplate 顯示）
-    category_template = TemplateSendMessage(
-        alt_text='category template',
-        template=ImageCarouselTemplate(
-            columns=[
-                ImageCarouselColumn(
-                    image_url='https://www.ptt.cc/images/logo.png',
-                    action=URIAction(
-                        label=subcategories[0][0],  # 第 1 個子分類的名稱
-                        uri=subcategories[0][1]    # 第 1 個子分類的 URL
-                    )
-                ),
-                ImageCarouselColumn(
-                    image_url='https://www.ptt.cc/images/logo.png',
-                    action=URIAction(
-                        label=subcategories[1][0],  # 第 2 個子分類的名稱
-                        uri=subcategories[1][1]    # 第 2 個子分類的 URL
-                    )
-                ),
-                ImageCarouselColumn(
-                    image_url='https://www.ptt.cc/images/logo.png',
-                    action=URIAction(
-                        label=subcategories[2][0],  # 第 3 個子分類的名稱
-                        uri=subcategories[2][1]    # 第 3 個子分類的 URL
-                    )
-                )
-            ]
-        )
-    )
-    line_bot_api.reply_message(event.reply_token, category_template)
+    
 
 if __name__ == "__main__":
     app.run()
