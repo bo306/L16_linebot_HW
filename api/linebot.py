@@ -34,7 +34,7 @@ def callback():
 
 def newest_movie():
     movie_info = []
-    response = requests.get('https://movies.yahoo.com.tw/movie_thisweek.html')
+    response = requests.get('https://tw.news.yahoo.com/entertainment/')
     soup = BeautifulSoup(response.text, 'html.parser')
     data = soup.find_all('div', class_ = 'release_info_text')
 
