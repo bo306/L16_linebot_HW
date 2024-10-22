@@ -74,19 +74,19 @@ def handle_message(event):
             template=ImageCarouselTemplate(
                 columns=[
                     ImageCarouselColumn(
-                        image_url='https://www.ptt.cc/images/logo.png',  # 這裡可以用 PTT 的通用 logo
+                        image_url='https://down-tw.img.susercontent.com/file/4968c4b4f185386a219b6396c2698dfc',  # 這裡可以用 PTT 的通用 logo
                         action=URIAction(
                             label=board_list[0][0],  # 第一個板名
                             uri=board_list[0][1]     # 第一個板的 URL
                         )),
                     ImageCarouselColumn(
-                        image_url='https://www.ptt.cc/images/logo.png',
+                        image_url='https://down-tw.img.susercontent.com/file/4968c4b4f185386a219b6396c2698dfc',
                         action=URIAction(
                             label=board_list[1][0],  # 第二個板名
                             uri=board_list[1][1]     # 第二個板的 URL
                         )),
                     ImageCarouselColumn(
-                        image_url='https://www.ptt.cc/images/logo.png',
+                        image_url='https://down-tw.img.susercontent.com/file/4968c4b4f185386a219b6396c2698dfc',
                         action=URIAction(
                             label=board_list[2][0],  # 第三個板名
                             uri=board_list[2][1]     # 第三個板的 URL
